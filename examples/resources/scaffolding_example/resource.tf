@@ -1,3 +1,3 @@
-resource "scaffolding_example" "example" {
+resource "configmerger_merged" "example" {
   configurable_attribute = "some-value"
 }
