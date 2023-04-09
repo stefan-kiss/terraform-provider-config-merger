@@ -5,6 +5,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// FindMappingNode finds the next yaml node that matches the given key. if the value is not a mapping node, an error is returned
 func FindMappingNode(key string, node *yaml.Node) (found *yaml.Node, err error) {
 	for i := 0; i < len(node.Content); i += 2 {
 		if node.Content[i].Value == key {
@@ -17,7 +18,7 @@ func FindMappingNode(key string, node *yaml.Node) (found *yaml.Node, err error) 
 	return nil, nil
 }
 
-// Add adds a yaml mapping node
+// Add adds a yaml node
 func Add(key string, node *yaml.Node) (newNode *yaml.Node) {
 	var keyNode, valueNode yaml.Node
 	keyNode.SetString(key)
