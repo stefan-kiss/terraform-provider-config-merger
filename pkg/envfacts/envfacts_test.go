@@ -2,7 +2,6 @@ package envfacts
 
 import (
 	"github.com/go-test/deep"
-	"github.com/k0kubun/pp"
 	"reflect"
 	"testing"
 	_ "unsafe"
@@ -51,7 +50,6 @@ func TestParseProjectStructure(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			gotP, err := ParseProjectStructure(tt.args.s)
 			if (err != nil) != tt.wantErr {
-				pp.Printf("ParseProjectStructure() gotP = %v", gotP)
 				t.Errorf("ParseProjectStructure() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
@@ -127,7 +125,7 @@ func TestExtractVar(t *testing.T) {
 	}
 }
 
-// HomeDirTesting returns a static home directory for testing
+// HomeDirTesting returns a static home directory for testing.
 func HomeDirTesting() (string, error) {
 	return "/home/test", nil
 }

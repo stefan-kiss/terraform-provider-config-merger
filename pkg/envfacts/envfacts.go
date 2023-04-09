@@ -20,7 +20,7 @@ type VarMapping struct {
 	RealPath      string
 }
 
-// ExtractVar extracts the string between double brackets from the given string, trimming whitespaces
+// ExtractVar extracts the string between double brackets from the given string, trimming whitespaces.
 func ExtractVar(s string) (string, error) {
 	vars := strings.Split(s, "{{")
 	if len(vars) < 2 || vars[0] != "" {
@@ -57,7 +57,7 @@ func ParseProjectStructure(s string) (p ProjectStructure, err error) {
 	return p, nil
 }
 
-// GetAbsPath returns the absolute path, while also doing home directory replacement
+// GetAbsPath returns the absolute path, while also doing home directory replacement.
 func GetAbsPath(inputPath string, homeDirFunc func() (string, error)) (absPath string, err error) {
 	cleanPath := filepath.Clean(inputPath)
 	switch cleanPath[0] {
@@ -81,6 +81,9 @@ func GetAbsPath(inputPath string, homeDirFunc func() (string, error)) (absPath s
 // MapPathToProject maps the given path to the project structure.
 func (p *ProjectStructure) MapPathToProject(projectPath string, homeDirFunc func() (string, error)) (err error) {
 	absPath, err := GetAbsPath(projectPath, homeDirFunc)
+	if err != nil {
+		return err
+	}
 	dirs := strings.Split(absPath, string(filepath.Separator))
 	dirs[0] = string(filepath.Separator) + dirs[0]
 	rootIdx := 0
@@ -108,7 +111,7 @@ func (p *ProjectStructure) MapPathToProject(projectPath string, homeDirFunc func
 	return nil
 }
 
-// GetFileDir returns the directory for the current source file
+// GetFileDir returns the directory for the current source file.
 func GetFileDir() string {
 	_, filename, _, _ := runtime.Caller(1)
 	return path.Dir(filename)
