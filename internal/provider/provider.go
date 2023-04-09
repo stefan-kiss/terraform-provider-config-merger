@@ -2,8 +2,6 @@ package provider
 
 import (
 	"context"
-	"net/http"
-
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/provider/schema"
@@ -24,7 +22,7 @@ type ConfigMergerProvider struct {
 
 // ConfigMergerProviderModel describes the provider data model.
 type ConfigMergerProviderModel struct {
-	Endpoint types.String `tfsdk:"endpoint"`
+	ProjectConfig types.String `tfsdk:"project_config"`
 }
 
 func (p *ConfigMergerProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -35,9 +33,9 @@ func (p *ConfigMergerProvider) Metadata(ctx context.Context, req provider.Metada
 func (p *ConfigMergerProvider) Schema(ctx context.Context, req provider.SchemaRequest, resp *provider.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		Attributes: map[string]schema.Attribute{
-			"endpoint": schema.StringAttribute{
-				MarkdownDescription: "Example provider attribute",
-				Optional:            true,
+			"project_config": schema.StringAttribute{
+				MarkdownDescription: "Project Configuration",
+				Required:            true,
 			},
 		},
 	}
@@ -56,9 +54,9 @@ func (p *ConfigMergerProvider) Configure(ctx context.Context, req provider.Confi
 	// if data.Endpoint.IsNull() { /* ... */ }
 
 	// Example client configuration for data sources and resources
-	client := http.DefaultClient
-	resp.DataSourceData = client
-	resp.ResourceData = client
+
+	resp.DataSourceData = data.ProjectConfig
+
 }
 
 func (p *ConfigMergerProvider) Resources(ctx context.Context) []func() resource.Resource {

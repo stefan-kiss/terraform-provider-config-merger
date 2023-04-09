@@ -3,11 +3,12 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/k0kubun/pp"
 	"github.com/stefan-kiss/terraform-provider-config-merger/pkg/envfacts"
 	"github.com/stefan-kiss/terraform-provider-config-merger/pkg/yutils"
 	"gopkg.in/yaml.v3"
-	"net/http"
+	"os"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -25,13 +26,14 @@ func NewMergedDataSource() datasource.DataSource {
 
 // MergedDataSource defines the data source implementation.
 type MergedDataSource struct {
-	client *http.Client
+	projectConfig string
 }
 
-// ExampleDataSourceModel describes the data source data model.
-type ExampleDataSourceModel struct {
-	ConfigurableAttribute types.String `tfsdk:"configurable_attribute"`
-	Id                    types.String `tfsdk:"id"`
+// MergedDataSourceModel describes the data source data model.
+type MergedDataSourceModel struct {
+	Id         types.String `tfsdk:"id"`
+	ConfigPath types.String `tfsdk:"config_path"`
+	Result     types.String `tfsdk:"result"`
 }
 
 func (d *MergedDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
@@ -42,12 +44,18 @@ func (d *MergedDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "Merged data source",
-
 		Attributes: map[string]schema.Attribute{
-			"configurable_attribute": schema.StringAttribute{
-				MarkdownDescription: "Merged configurable attribute",
-				Optional:            true,
+			"config_path": schema.StringAttribute{
+				MarkdownDescription: "Path to the most specific configuration file",
+				Required:            true,
 			},
+			"result": schema.StringAttribute{
+				MarkdownDescription: "Path to the most specific configuration file",
+				Required:            false,
+				Optional:            false,
+				Computed:            true,
+			},
+			// https://github.com/hashicorp/terraform-plugin-testing/issues/84
 			"id": schema.StringAttribute{
 				MarkdownDescription: "Example identifier",
 				Computed:            true,
@@ -61,23 +69,26 @@ func (d *MergedDataSource) Configure(ctx context.Context, req datasource.Configu
 	if req.ProviderData == nil {
 		return
 	}
+	tflog.Trace(ctx, pp.Sprintln(req.ProviderData))
 
-	client, ok := req.ProviderData.(*http.Client)
+	projectConfig, ok := req.ProviderData.(basetypes.StringValue)
+	tflog.Trace(ctx, pp.Sprintln(projectConfig))
 
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Data Source Configure Type",
-			fmt.Sprintf("Expected *http.Client, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected basetypes.StringValue, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
 	}
+	tflog.Trace(ctx, pp.Sprintln(projectConfig.ValueString()))
 
-	d.client = client
+	d.projectConfig = projectConfig.ValueString()
 }
 
 func (d *MergedDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data ExampleDataSourceModel
+	var data MergedDataSourceModel
 
 	// Read Terraform configuration data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
@@ -96,15 +107,17 @@ func (d *MergedDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 
 	// For the purposes of this example code, hardcoding a response value to
 	// save into the Terraform state.
-	data.Id = types.StringValue("example-id")
-	p, _ := envfacts.ParseProjectStructure("config/{{.aaa}}/{{.bbb.ccc}}/{{.ccc}}")
 
-	err := p.MapPathToProject(envfacts.GetFileDir()+"/config/ana/beta/ddwe", func() (string, error) {
-		return "/home/test", nil
-	})
-
+	p, err := envfacts.ParseProjectStructure(d.projectConfig)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable parse project, got error: %s", err))
+		return
+
+	}
+
+	err = p.MapPathToProject(data.ConfigPath.ValueString(), os.UserHomeDir)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable parse config dir, got error: %s", err))
 		return
 	}
 
@@ -137,7 +150,7 @@ func (d *MergedDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable Marshal output, got error: %s", err))
 		return
 	}
-	data.ConfigurableAttribute = types.StringValue(string(out))
+	data.Result = types.StringValue(string(out))
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log
 	tflog.Trace(ctx, "read a data source")

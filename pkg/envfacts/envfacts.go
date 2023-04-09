@@ -84,15 +84,20 @@ func (p *ProjectStructure) MapPathToProject(projectPath string, homeDirFunc func
 	dirs := strings.Split(absPath, string(filepath.Separator))
 	dirs[0] = string(filepath.Separator) + dirs[0]
 	rootIdx := 0
+	found := false
 
 	for i := len(dirs) - 1; i >= 0; i-- {
 		if dirs[i] == p.Root.VariableValue {
 			if len(dirs[i:]) != len(p.Vars)+1 {
 				return fmt.Errorf("projectPath %q does not match project structure %q", projectPath, p)
 			}
+			found = true
 			rootIdx = i
 			break
 		}
+	}
+	if !found {
+		return fmt.Errorf("projectPath %q does not match project structure %q", projectPath, p)
 	}
 	p.Root.RealPath = path.Join(dirs[:rootIdx+1]...)
 	varStartIdx := rootIdx + 1
