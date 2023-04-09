@@ -45,6 +45,11 @@ func (d *MergedDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "Merged data source",
 		Attributes: map[string]schema.Attribute{
+			// https://github.com/hashicorp/terraform-plugin-testing/issues/84
+			"id": schema.StringAttribute{
+				MarkdownDescription: "Example identifier",
+				Computed:            true,
+			},
 			"config_path": schema.StringAttribute{
 				MarkdownDescription: "Path to the most specific configuration file",
 				Required:            true,
@@ -53,11 +58,6 @@ func (d *MergedDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 				MarkdownDescription: "Path to the most specific configuration file",
 				Required:            false,
 				Optional:            false,
-				Computed:            true,
-			},
-			// https://github.com/hashicorp/terraform-plugin-testing/issues/84
-			"id": schema.StringAttribute{
-				MarkdownDescription: "Example identifier",
 				Computed:            true,
 			},
 		},
@@ -85,6 +85,7 @@ func (d *MergedDataSource) Configure(ctx context.Context, req datasource.Configu
 	tflog.Trace(ctx, pp.Sprintln(projectConfig.ValueString()))
 
 	d.projectConfig = projectConfig.ValueString()
+
 }
 
 func (d *MergedDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -151,6 +152,10 @@ func (d *MergedDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 	data.Result = types.StringValue(string(out))
+	// https://developer.hashicorp.com/terraform/plugin/framework/acctests#implement-id-attribute
+	// We also need to set this (should be a hash)
+	data.Id = types.StringValue(string(out))
+
 	// Write logs using the tflog package
 	// Documentation: https://terraform.io/plugin/log
 	tflog.Trace(ctx, "read a data source")
