@@ -3,10 +3,10 @@ package provider
 import (
 	"context"
 	"fmt"
+	"github.com/gookit/goutil/maputil"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/k0kubun/pp"
 	"github.com/stefan-kiss/terraform-provider-config-merger/pkg/envfacts"
-	"github.com/stefan-kiss/terraform-provider-config-merger/pkg/yutils"
 	"gopkg.in/yaml.v3"
 	"os"
 	"strings"
@@ -123,32 +123,20 @@ func (d *MergedDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	}
 
 	tflog.Trace(ctx, pp.Sprintln(p))
-	outNodes := yaml.Node{
-		Kind: yaml.DocumentNode,
-		Content: []*yaml.Node{
-			{
-				Kind:    yaml.MappingNode,
-				Tag:     "!!map",
-				Content: []*yaml.Node{},
-			},
-		},
-	}
-	tflog.Trace(ctx, pp.Sprintln(outNodes))
+	outMap := make(map[string]interface{}, 0)
+	tflog.Trace(ctx, pp.Sprintln(outMap))
 	for _, v := range p.Vars {
-		pathKeys := strings.Split(v.VariableName, ".")
-		if pathKeys[0] == "" {
-			pathKeys = pathKeys[1:]
-		}
-		err := yutils.SetValueAtPath(pathKeys, v.VariableValue, &outNodes)
+		pathKeys := strings.TrimPrefix(v.VariableName, ".")
+		err := maputil.SetByPath(&outMap, pathKeys, v.VariableValue)
 		if err != nil {
-			resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable to add key( %s ): %q", v.VariableName, err))
+			resp.Diagnostics.AddError("Client Error: ", fmt.Sprintf("Unable to add key( %s ): %q", v.VariableName, err))
 			return
 		}
 	}
-	tflog.Trace(ctx, pp.Sprintln(outNodes))
-	out, err := yaml.Marshal(&outNodes)
+	tflog.Trace(ctx, pp.Sprintln(outMap))
+	out, err := yaml.Marshal(&outMap)
 	if err != nil {
-		resp.Diagnostics.AddError("Client Error", fmt.Sprintf("Unable Marshal output, got error: %s", err))
+		resp.Diagnostics.AddError("Client Error: ", fmt.Sprintf("Unable Marshal output, got error: %s", err))
 		return
 	}
 	data.Result = types.StringValue(string(out))
