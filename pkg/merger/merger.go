@@ -91,7 +91,7 @@ func parseYAML(data []byte) (map[interface{}]interface{}, error) {
 	}
 
 	if empty_y, _ := simpleyaml.NewYaml([]byte{}); *y == *empty_y {
-		log.Debug("YAML doc is empty, creating empty hash/map")
+		log.Debugf("YAML doc is empty, creating empty hash/map")
 		return make(map[interface{}]interface{}), nil
 	}
 
@@ -125,7 +125,7 @@ func MergeAllDocs(files []YamlFile, options MergeOpts) (*spruce.Evaluator, error
 	root := make(map[interface{}]interface{})
 
 	for _, file := range files {
-		log.Debug("Processing file '%s'", file.Path)
+		log.Debugf("Processing file '%s'", file.Path)
 
 		data, err := readFile(&file)
 		if err != nil {
@@ -135,7 +135,7 @@ func MergeAllDocs(files []YamlFile, options MergeOpts) (*spruce.Evaluator, error
 		doc, err := parseYAML(data)
 		if err != nil {
 			if isArrayError(err) && options.EnableGoPatch {
-				log.Debug("Detected root of document as an array. Attempting go-patch parsing")
+				log.Debugf("Detected root of document as an array. Attempting go-patch parsing")
 				ops, err := parseGoPatch(data)
 				if err != nil {
 					return nil, ansi.Errorf("@m{%s}: @R{%s}\n", file.Path, err.Error())
@@ -156,7 +156,7 @@ func MergeAllDocs(files []YamlFile, options MergeOpts) (*spruce.Evaluator, error
 			m.Merge(root, doc)
 		}
 		tmpYaml, _ := yaml.Marshal(root) // we don't care about errors for debugging
-		log.Debug("Current data after processing '%s':\n%s", file.Path, tmpYaml)
+		log.Debugf("Current data after processing '%s':\n%s", file.Path, tmpYaml)
 	}
 
 	if m.Error() != nil {
