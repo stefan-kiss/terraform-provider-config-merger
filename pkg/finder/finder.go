@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 )
 
-// FindConfigFiles finds all files named config.yaml that are found in the root
+// FindConfigFiles finds all files named config.yaml that are found in the root.
 func FindConfigFiles(p envfacts.ProjectStructure) (fileList []string, err error) {
 	fileList = make([]string, 0)
 
@@ -19,7 +19,7 @@ func FindConfigFiles(p envfacts.ProjectStructure) (fileList []string, err error)
 	return fileList, nil
 }
 
-// FileExists checks if the given file exists
+// FileExists checks if the given file exists.
 func FileExists(filePath string) bool {
 	if fileInfo, err := os.Stat(filePath); err != nil || fileInfo.IsDir() {
 		return false

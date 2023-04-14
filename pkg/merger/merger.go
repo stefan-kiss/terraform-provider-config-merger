@@ -25,19 +25,19 @@ type YamlFile struct {
 	Reader io.ReadCloser
 }
 
-func loadYamlFile(file string) (YamlFile, error) {
-	var target YamlFile
-	if file == "-" {
-		target = YamlFile{Reader: os.Stdin, Path: "-"}
-	} else {
-		f, err := os.Open(file)
-		if err != nil {
-			return YamlFile{}, ansi.Errorf("@R{Error reading file} @m{%s}: %s", file, err.Error())
-		}
-		target = YamlFile{Path: file, Reader: f}
-	}
-	return target, nil
-}
+//func loadYamlFile(file string) (YamlFile, error) {
+//	var target YamlFile
+//	if file == "-" {
+//		target = YamlFile{Reader: os.Stdin, Path: "-"}
+//	} else {
+//		f, err := os.Open(file)
+//		if err != nil {
+//			return YamlFile{}, ansi.Errorf("@R{Error reading file} @m{%s}: %s", file, err.Error())
+//		}
+//		target = YamlFile{Path: file, Reader: f}
+//	}
+//	return target, nil
+//}
 
 type MergeOpts struct {
 	SkipEval       bool               `goptions:"--skip-eval, description='Do not evaluate spruce logic after merging docs'"`
@@ -153,7 +153,9 @@ func MergeAllDocs(files []YamlFile, options MergeOpts) (*spruce.Evaluator, error
 				return nil, ansi.Errorf("@m{%s}: @R{%s}\n", file.Path, err.Error())
 			}
 		} else {
-			m.Merge(root, doc)
+			// this is ignored in spruce original code also. TBD if we need to treat it as an error.
+			_ = m.Merge(root, doc)
+
 		}
 		tmpYaml, _ := yaml.Marshal(root) // we don't care about errors for debugging
 		log.Debugf("Current data after processing '%s':\n%s", file.Path, tmpYaml)
