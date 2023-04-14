@@ -1,13 +1,17 @@
 package provider
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"github.com/gookit/goutil/maputil"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/k0kubun/pp"
 	"github.com/stefan-kiss/terraform-provider-config-merger/pkg/envfacts"
+	"github.com/stefan-kiss/terraform-provider-config-merger/pkg/finder"
+	"github.com/stefan-kiss/terraform-provider-config-merger/pkg/merger"
 	"gopkg.in/yaml.v3"
+	"io"
 	"os"
 	"strings"
 
@@ -139,7 +143,43 @@ func (d *MergedDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		resp.Diagnostics.AddError("Client Error: ", fmt.Sprintf("Unable Marshal output, got error: %s", err))
 		return
 	}
-	data.Result = types.StringValue(string(out))
+
+	mergeFileNames, err := finder.FindConfigFiles(p)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error: ", fmt.Sprintf("Unable FindConfigFiles, got error: %s", err))
+		return
+	}
+	yamlFiles := make([]merger.YamlFile, 0)
+
+	for _, filePath := range mergeFileNames {
+		f, err := os.Open(filePath)
+		if err != nil {
+			resp.Diagnostics.AddError("Client Error: ", fmt.Sprintf("Unable os.Open, got error: %s", err))
+			return
+		}
+
+		yamlFiles = append(yamlFiles, merger.YamlFile{
+			Path:   filePath,
+			Reader: f,
+		})
+	}
+	yamlFiles = append(yamlFiles, merger.YamlFile{
+		Path:   "facts.yaml",
+		Reader: io.NopCloser(bytes.NewReader(out)),
+	})
+
+	ev, err := merger.MergeAllDocs(yamlFiles, merger.MergeOpts{})
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error: ", fmt.Sprintf("Unable merger.MergeAllDocs, got error: %s", err))
+		return
+	}
+	merged, err := yaml.Marshal(ev.Tree)
+	if err != nil {
+		resp.Diagnostics.AddError("Client Error: ", fmt.Sprintf("Unable yaml.Marshal, got error: %s", err))
+		return
+	}
+
+	data.Result = types.StringValue(string(merged))
 	// https://developer.hashicorp.com/terraform/plugin/framework/acctests#implement-id-attribute
 	// We also need to set this (should be a hash)
 	data.Id = types.StringValue(string(out))
