@@ -25,15 +25,19 @@ func TestAccExampleDataSource(t *testing.T) {
 
 const testAccExampleDataSourceConfig = `
 provider "configmerger" {
-  project_config = "config/{{.globals.environment}}/{{.globals.region}}/{{.globals.project}}"
+  project_config = "config/{{facts.environment}}/{{facts.region}}/{{facts.project}}"
 }
 data "configmerger_merged" "test" {
-  config_path = "/home/user/project/config/development/us-east-2/s3bucket"
+  config_path = "../../tests/config/production/us-west-2/s3bucket"
 }
 `
 
-const testAccExampleDataSourceResult = `globals:
-    environment: development
-    region: us-east-2
+const testAccExampleDataSourceResult = `facts:
+    environment: production
     project: s3bucket
+    region: us-west-2
+root_key:
+    key_1: s3bucket_value_1
+    key_2: production-s3bucket_value_2
+    key_3: s3bucket_value_1
 `
