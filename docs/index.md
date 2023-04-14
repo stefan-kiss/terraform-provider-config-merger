@@ -14,7 +14,7 @@ description: |-
 
 ```terraform
 provider "configmerger" {
-  # example configuration here
+  project_config = "config/{{facts.environment}}/{{facts.region}}/{{facts.project}}"
 }
 ```
 
