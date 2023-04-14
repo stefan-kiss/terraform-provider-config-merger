@@ -1,0 +1,4 @@
+root_key:
+  key_1: s3bucket_value_1
+  key_2: (( concat .facts.environment "-" .facts.project "_value_2" ))
+  key_3: (( grab root_key.key_1 ))
