@@ -26,6 +26,10 @@ func TestAccExampleDataSource(t *testing.T) {
 const testAccExampleDataSourceConfig = `
 provider "configmerger" {
   project_config = "config/{{facts.environment}}/{{facts.region}}/{{facts.project}}"
+  config_globs   = [
+    "config.yaml",
+    "*.config.yml",
+  ]
 }
 data "configmerger_merged" "test" {
   config_path = "../../tests/config/production/us-west-2/s3bucket"
