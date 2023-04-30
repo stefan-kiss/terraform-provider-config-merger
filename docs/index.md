@@ -23,4 +23,5 @@ provider "configmerger" {
 
 ### Required
 
+- `config_globs` (List of String) List of globs to search for config files. Only last segment of each glob is considered
 - `project_config` (String) Project Configuration

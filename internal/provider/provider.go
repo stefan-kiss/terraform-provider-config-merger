@@ -22,7 +22,8 @@ type ConfigMergerProvider struct {
 
 // ConfigMergerProviderModel describes the provider data model.
 type ConfigMergerProviderModel struct {
-	ProjectConfig types.String `tfsdk:"project_config"`
+	ProjectConfig types.String   `tfsdk:"project_config"`
+	ConfigGlobs   []types.String `tfsdk:"config_globs"`
 }
 
 func (p *ConfigMergerProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
@@ -36,6 +37,12 @@ func (p *ConfigMergerProvider) Schema(ctx context.Context, req provider.SchemaRe
 			"project_config": schema.StringAttribute{
 				MarkdownDescription: "Project Configuration",
 				Required:            true,
+			},
+			"config_globs": schema.ListAttribute{
+				ElementType:         types.StringType,
+				Required:            true,
+				Optional:            false,
+				MarkdownDescription: "List of globs to search for config files. Only last segment of each glob is considered",
 			},
 		},
 	}
@@ -55,7 +62,7 @@ func (p *ConfigMergerProvider) Configure(ctx context.Context, req provider.Confi
 
 	// Example client configuration for data sources and resources
 
-	resp.DataSourceData = data.ProjectConfig
+	resp.DataSourceData = data
 
 }
 

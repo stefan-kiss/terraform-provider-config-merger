@@ -2,27 +2,34 @@ package finder
 
 import (
 	"github.com/stefan-kiss/terraform-provider-config-merger/pkg/envfacts"
-	"os"
 	"path/filepath"
 )
 
 // FindConfigFiles finds all files named config.yaml that are found in the root.
-func FindConfigFiles(p envfacts.ProjectStructure) (fileList []string, err error) {
+func FindConfigFiles(p envfacts.ProjectStructure, fileGlobs []string) (fileList []string, err error) {
 	fileList = make([]string, 0)
 
 	for _, v := range append([]envfacts.VarMapping{p.Root}, p.Vars...) {
-		checkPath := filepath.Join(v.RealPath, "config.yaml")
-		if FileExists(checkPath) {
-			fileList = append(fileList, checkPath)
+		dirList, err := MatchGlobs(fileGlobs, v.RealPath)
+		if err != nil {
+			return nil, err
 		}
+		fileList = append(fileList, dirList...)
 	}
 	return fileList, nil
 }
 
-// FileExists checks if the given file exists.
-func FileExists(filePath string) bool {
-	if fileInfo, err := os.Stat(filePath); err != nil || fileInfo.IsDir() {
-		return false
+// MatchGlobs finds any file paths that matches any of the list of globs in `dirPath`.
+// The glob patterns are formed by joining `dirPath` with each of the globs in `fileGlobs`.
+func MatchGlobs(fileGlobs []string, dirPath string) (matches []string, err error) {
+	matches = make([]string, 0)
+	for _, fileGlob := range fileGlobs {
+		base := filepath.Base(fileGlob)
+		results, err := filepath.Glob(filepath.Join(dirPath, base))
+		if err != nil {
+			return matches, err
+		}
+		matches = append(matches, results...)
 	}
-	return true
+	return matches, nil
 }

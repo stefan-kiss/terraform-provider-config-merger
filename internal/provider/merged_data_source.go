@@ -31,6 +31,7 @@ func NewMergedDataSource() datasource.DataSource {
 // MergedDataSource defines the data source implementation.
 type MergedDataSource struct {
 	projectConfig string
+	configGlobs   []string
 }
 
 // MergedDataSourceModel describes the data source data model.
@@ -68,6 +69,11 @@ func (d *MergedDataSource) Schema(ctx context.Context, req datasource.SchemaRequ
 	}
 }
 
+type C struct {
+	ProjectConfig basetypes.StringValue
+	ConfigGlobs   []basetypes.StringValue
+}
+
 func (d *MergedDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
@@ -75,21 +81,23 @@ func (d *MergedDataSource) Configure(ctx context.Context, req datasource.Configu
 	}
 	tflog.Trace(ctx, pp.Sprintln(req.ProviderData))
 
-	projectConfig, ok := req.ProviderData.(basetypes.StringValue)
-	tflog.Trace(ctx, pp.Sprintln(projectConfig))
-
+	providerConfig, ok := req.ProviderData.(ConfigMergerProviderModel)
+	tflog.Trace(ctx, pp.Sprintln(providerConfig))
 	if !ok {
 		resp.Diagnostics.AddError(
 			"Unexpected Data Source Configure Type",
-			fmt.Sprintf("Expected basetypes.StringValue, got: %T. Please report this issue to the provider developers.", req.ProviderData),
+			fmt.Sprintf("Expected ConfigMergerProviderModel, got: %T. Please report this issue to the provider developers.", req.ProviderData),
 		)
 
 		return
 	}
-	tflog.Trace(ctx, pp.Sprintln(projectConfig.ValueString()))
 
-	d.projectConfig = projectConfig.ValueString()
-
+	d.projectConfig = providerConfig.ProjectConfig.ValueString()
+	d.configGlobs = make([]string, len(providerConfig.ConfigGlobs))
+	for i, v := range providerConfig.ConfigGlobs {
+		d.configGlobs[i] = v.ValueString()
+	}
+	tflog.Trace(ctx, pp.Sprintln(d.configGlobs))
 }
 
 func (d *MergedDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
@@ -144,7 +152,7 @@ func (d *MergedDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	mergeFileNames, err := finder.FindConfigFiles(p)
+	mergeFileNames, err := finder.FindConfigFiles(p, nil)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error: ", fmt.Sprintf("Unable FindConfigFiles, got error: %s", err))
 		return
@@ -152,17 +160,15 @@ func (d *MergedDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 	yamlFiles := make([]merger.YamlFile, 0)
 
 	for _, filePath := range mergeFileNames {
-		f, err := os.Open(filePath)
+		y, err := merger.LoadYamlFile(filePath)
 		if err != nil {
-			resp.Diagnostics.AddError("Client Error: ", fmt.Sprintf("Unable os.Open, got error: %s", err))
+			resp.Diagnostics.AddError("Client Error: ", fmt.Sprintf("Unable to LoadYamlFile, got error: %s", err))
 			return
 		}
 
-		yamlFiles = append(yamlFiles, merger.YamlFile{
-			Path:   filePath,
-			Reader: f,
-		})
+		yamlFiles = append(yamlFiles, y)
 	}
+
 	yamlFiles = append(yamlFiles, merger.YamlFile{
 		Path:   "facts.yaml",
 		Reader: io.NopCloser(bytes.NewReader(out)),

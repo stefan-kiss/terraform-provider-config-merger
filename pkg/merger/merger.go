@@ -25,19 +25,19 @@ type YamlFile struct {
 	Reader io.ReadCloser
 }
 
-//func loadYamlFile(file string) (YamlFile, error) {
-//	var target YamlFile
-//	if file == "-" {
-//		target = YamlFile{Reader: os.Stdin, Path: "-"}
-//	} else {
-//		f, err := os.Open(file)
-//		if err != nil {
-//			return YamlFile{}, ansi.Errorf("@R{Error reading file} @m{%s}: %s", file, err.Error())
-//		}
-//		target = YamlFile{Path: file, Reader: f}
-//	}
-//	return target, nil
-//}
+func LoadYamlFile(file string) (YamlFile, error) {
+	var target YamlFile
+	if file == "-" {
+		target = YamlFile{Reader: os.Stdin, Path: "-"}
+	} else {
+		f, err := os.Open(file)
+		if err != nil {
+			return YamlFile{}, ansi.Errorf("@R{Error reading file} @m{%s}: %s", file, err.Error())
+		}
+		target = YamlFile{Path: file, Reader: f}
+	}
+	return target, nil
+}
 
 type MergeOpts struct {
 	SkipEval       bool               `goptions:"--skip-eval, description='Do not evaluate spruce logic after merging docs'"`
