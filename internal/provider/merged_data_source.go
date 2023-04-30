@@ -152,7 +152,7 @@ func (d *MergedDataSource) Read(ctx context.Context, req datasource.ReadRequest,
 		return
 	}
 
-	mergeFileNames, err := finder.FindConfigFiles(p, nil)
+	mergeFileNames, err := finder.FindConfigFiles(p, d.configGlobs)
 	if err != nil {
 		resp.Diagnostics.AddError("Client Error: ", fmt.Sprintf("Unable FindConfigFiles, got error: %s", err))
 		return
