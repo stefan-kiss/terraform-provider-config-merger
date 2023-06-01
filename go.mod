@@ -12,7 +12,7 @@ require (
 	github.com/hashicorp/terraform-plugin-docs v0.14.1
 	github.com/hashicorp/terraform-plugin-framework v1.2.0
 	github.com/hashicorp/terraform-plugin-go v0.15.0
-	github.com/hashicorp/terraform-plugin-log v0.8.0
+	github.com/hashicorp/terraform-plugin-log v0.9.0
 	github.com/hashicorp/terraform-plugin-testing v1.2.0
 	github.com/k0kubun/pp v3.0.1+incompatible
 	github.com/sirupsen/logrus v1.9.0
