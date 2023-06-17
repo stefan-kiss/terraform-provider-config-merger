@@ -23,5 +23,3 @@ Merged data source
 
 - `id` (String) Example identifier
 - `result` (String) Path to the most specific configuration file
-
-
