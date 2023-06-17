@@ -9,6 +9,8 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"strings"
+	"testing"
 )
 
 func symlinkFile(src string, dest string) error {
@@ -100,7 +102,7 @@ func CopyFile(src, dest string) error {
 
 // CopyDir recursively copies directories and files
 // from src to dest.
-func CopyDir(src string, dest string) error {
+func CopyDir(src, dest, baseDirName string) error {
 	srcInfo, err := os.Stat(src)
 	if err != nil {
 		return fmt.Errorf("unable to stat: %w", err)
@@ -119,8 +121,12 @@ func CopyDir(src string, dest string) error {
 		srcFilepath := path.Join(src, dirEntry.Name())
 		destFilepath := path.Join(dest, dirEntry.Name())
 
+		if !strings.Contains(srcFilepath, baseDirName) {
+			continue
+		}
+
 		if dirEntry.IsDir() {
-			if err = CopyDir(srcFilepath, destFilepath); err != nil {
+			if err = CopyDir(srcFilepath, destFilepath, baseDirName); err != nil {
 				return fmt.Errorf("unable to copy directory: %w", err)
 			}
 		} else {
@@ -131,4 +137,43 @@ func CopyDir(src string, dest string) error {
 	}
 
 	return nil
+}
+
+// TestExpectTFatal provides a wrapper for logic which should call
+// (*testing.T).Fatal() or (*testing.T).Fatalf().
+//
+// Since we do not want the wrapping test to fail when an expected test error
+// occurs, it is required that the testLogic passed in uses
+// github.com/mitchellh/go-testing-interface.RuntimeT instead of the real
+// *testing.T.
+//
+// If Fatal() or Fatalf() is not called in the logic, the real (*testing.T).Fatal() will
+// be called to fail the test.
+func TestExpectTFatal(t *testing.T, testLogic func()) {
+	t.Helper()
+
+	var recoverIface interface{}
+
+	func() {
+		defer func() {
+			recoverIface = recover()
+		}()
+
+		testLogic()
+	}()
+
+	if recoverIface == nil {
+		t.Fatalf("expected t.Fatal(), got none")
+	}
+
+	recoverStr, ok := recoverIface.(string)
+
+	if !ok {
+		t.Fatalf("expected string from recover(), got: %v (%T)", recoverIface, recoverIface)
+	}
+
+	// this string is hardcoded in github.com/mitchellh/go-testing-interface
+	if !strings.HasPrefix(recoverStr, "testing.T failed, see logs for output") {
+		t.Fatalf("expected t.Fatal(), got: %s", recoverStr)
+	}
 }
