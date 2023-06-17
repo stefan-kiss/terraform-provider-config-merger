@@ -25,3 +25,7 @@ linters:
     - unparam
     - unused
     - vet
+run:
+  timeout: 5m
+  skip-dirs:
+    - vendor # no deed to lint imported libraries
