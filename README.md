@@ -41,7 +41,7 @@ The provider gets several inputs:
  
 
 ```terraform
-provider "configmerger" {
+provider "config" {
   project_config = "config/{{facts.environment}}/{{facts.region}}/{{facts.project}}"
   config_globs = [
     "config.yaml",

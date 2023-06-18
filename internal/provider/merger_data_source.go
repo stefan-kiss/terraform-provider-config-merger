@@ -22,30 +22,30 @@ import (
 )
 
 // Ensure provider defined types fully satisfy framework interfaces.
-var _ datasource.DataSource = &MergedDataSource{}
+var _ datasource.DataSource = &MergerDataSource{}
 
-func NewMergedDataSource() datasource.DataSource {
-	return &MergedDataSource{}
+func NewMergerDataSource() datasource.DataSource {
+	return &MergerDataSource{}
 }
 
-// MergedDataSource defines the data source implementation.
-type MergedDataSource struct {
+// MergerDataSource defines the data source implementation.
+type MergerDataSource struct {
 	projectConfig string
 	configGlobs   []string
 }
 
-// MergedDataSourceModel describes the data source data model.
-type MergedDataSourceModel struct {
+// MergerDataSourceModel describes the data source data model.
+type MergerDataSourceModel struct {
 	Id         types.String `tfsdk:"id"`
 	ConfigPath types.String `tfsdk:"config_path"`
 	Result     types.String `tfsdk:"result"`
 }
 
-func (d *MergedDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_merged"
+func (d *MergerDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
+	resp.TypeName = req.ProviderTypeName + "_merger"
 }
 
-func (d *MergedDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
+func (d *MergerDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
 	resp.Schema = schema.Schema{
 		// This description is used by the documentation generator and the language server.
 		MarkdownDescription: "Merged data source",
@@ -74,7 +74,7 @@ type C struct {
 	ConfigGlobs   []basetypes.StringValue
 }
 
-func (d *MergedDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
+func (d *MergerDataSource) Configure(ctx context.Context, req datasource.ConfigureRequest, resp *datasource.ConfigureResponse) {
 	// Prevent panic if the provider has not been configured.
 	if req.ProviderData == nil {
 		return
@@ -100,8 +100,8 @@ func (d *MergedDataSource) Configure(ctx context.Context, req datasource.Configu
 	tflog.Trace(ctx, pp.Sprintln(d.configGlobs))
 }
 
-func (d *MergedDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
-	var data MergedDataSourceModel
+func (d *MergerDataSource) Read(ctx context.Context, req datasource.ReadRequest, resp *datasource.ReadResponse) {
+	var data MergerDataSourceModel
 
 	// Read Terraform configuration data into the model
 	resp.Diagnostics.Append(req.Config.Get(ctx, &data)...)
