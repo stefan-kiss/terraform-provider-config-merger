@@ -41,7 +41,16 @@ The provider gets several inputs:
  
 
 ```terraform
-provider "config" {
+terraform {
+  required_providers {
+    merger = {
+      source  = "registry.terraform.io/stefan-kiss/config-merger"
+      version = "=1.0.0"
+    }
+  }
+}
+
+provider "config-merger" {
   project_config = "config/{{facts.environment}}/{{facts.region}}/{{facts.project}}"
   config_globs = [
     "config.yaml",
@@ -49,7 +58,7 @@ provider "config" {
   ]
 }
 
-data "configmerger_merged" "example" {
+data "config-merger_merged" "example" {
   config_path = "config/production/us-west-2/s3bucket"
 }
 ```
