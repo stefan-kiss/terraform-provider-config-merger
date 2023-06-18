@@ -13,12 +13,12 @@ Merged data source
 ## Example Usage
 
 ```terraform
-data "merger_result" "example" {
+data "config-merger_result" "example" {
   config_path = "config/production/us-west-2/s3bucket"
 }
 
 locals {
-  output = yamldecode(data.merger_result.example["result"])
+  output = yamldecode(data.config-merger_result["result"])
 }
 ```
 
