@@ -27,7 +27,7 @@ type ConfigMergerProviderModel struct {
 }
 
 func (p *ConfigMergerProvider) Metadata(ctx context.Context, req provider.MetadataRequest, resp *provider.MetadataResponse) {
-	resp.TypeName = "config"
+	resp.TypeName = "config-merger"
 	resp.Version = p.version
 }
 

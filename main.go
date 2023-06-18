@@ -36,7 +36,7 @@ func main() {
 
 	opts := providerserver.ServeOpts{
 		// TODO: Update this string with the published name of your provider.
-		Address: "registry.terraform.io/stefan-kiss/config",
+		Address: "registry.terraform.io/stefan-kiss/config-merger",
 		Debug:   debug,
 	}
 

@@ -42,7 +42,7 @@ type MergerDataSourceModel struct {
 }
 
 func (d *MergerDataSource) Metadata(ctx context.Context, req datasource.MetadataRequest, resp *datasource.MetadataResponse) {
-	resp.TypeName = req.ProviderTypeName + "_merger"
+	resp.TypeName = req.ProviderTypeName + "_result"
 }
 
 func (d *MergerDataSource) Schema(ctx context.Context, req datasource.SchemaRequest, resp *datasource.SchemaResponse) {
