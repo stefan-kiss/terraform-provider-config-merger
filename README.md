@@ -43,7 +43,7 @@ The provider gets several inputs:
 ```terraform
 terraform {
   required_providers {
-    merger = {
+    config-merger = {
       source  = "registry.terraform.io/stefan-kiss/config-merger"
       version = "=1.0.0"
     }
