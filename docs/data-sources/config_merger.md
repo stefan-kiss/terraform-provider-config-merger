@@ -13,7 +13,7 @@ Merged data source
 ## Example Usage
 
 ```terraform
-data "config-merger" "example" {
+data "config_merger" "example" {
   config_path = "config/production/us-west-2/s3bucket"
 }
 

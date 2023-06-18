@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     config = {
-      source         = "registry.terraform.io/stefan-kiss/config"
-      version        = "=1.0.0"
+      source  = "registry.terraform.io/stefan-kiss/config"
+      version = "=1.0.0"
     }
   }
 }
