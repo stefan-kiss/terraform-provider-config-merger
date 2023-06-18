@@ -16,7 +16,7 @@ func TestAccExampleDataSource(t *testing.T) {
 			{
 				Config: testAccExampleDataSourceConfig,
 				Check: resource.ComposeAggregateTestCheckFunc(
-					resource.TestCheckResourceAttr("data.configmerger_merged.test", "result", testAccExampleDataSourceResult),
+					resource.TestCheckResourceAttr("data.config-merger_result.test", "result", testAccExampleDataSourceResult),
 				),
 			},
 		},
@@ -24,14 +24,15 @@ func TestAccExampleDataSource(t *testing.T) {
 }
 
 const testAccExampleDataSourceConfig = `
-provider "configmerger" {
+provider "config-merger" {
   project_config = "config/{{facts.environment}}/{{facts.region}}/{{facts.project}}"
   config_globs   = [
     "config.yaml",
     "*.config.yaml",
   ]
 }
-data "configmerger_merged" "test" {
+
+data "config-merger_result" "test" {
   config_path = "../../tests/config/production/us-west-2/s3bucket"
 }
 `
