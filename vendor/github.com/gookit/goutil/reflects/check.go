@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-// HasChild check. eg: array, slice, map, struct
+// HasChild type check. eg: array, slice, map, struct
 func HasChild(v reflect.Value) bool {
 	switch v.Kind() {
 	case reflect.Array, reflect.Slice, reflect.Map, reflect.Struct:
@@ -19,17 +19,25 @@ func IsArrayOrSlice(k reflect.Kind) bool {
 	return k == reflect.Slice || k == reflect.Array
 }
 
+// IsSimpleKind kind in: string, bool, intX, uintX, floatX
+func IsSimpleKind(k reflect.Kind) bool {
+	if reflect.String == k {
+		return true
+	}
+	return k > reflect.Invalid && k <= reflect.Float64
+}
+
 // IsAnyInt check is intX or uintX type
 func IsAnyInt(k reflect.Kind) bool {
 	return k >= reflect.Int && k <= reflect.Uintptr
 }
 
-// IsIntx check is intX or uintX type
+// IsIntx check is intX type
 func IsIntx(k reflect.Kind) bool {
 	return k >= reflect.Int && k <= reflect.Int64
 }
 
-// IsUintX check is intX or uintX type
+// IsUintX check is uintX type
 func IsUintX(k reflect.Kind) bool {
 	return k >= reflect.Uint && k <= reflect.Uintptr
 }
@@ -76,6 +84,9 @@ func IsEqual(src, dst any) bool {
 	return bytes.Equal(bs1, bs2)
 }
 
+// IsZero reflect value check, alias of the IsEmpty()
+var IsZero = IsEmpty
+
 // IsEmpty reflect value check
 func IsEmpty(v reflect.Value) bool {
 	switch v.Kind() {
@@ -100,11 +111,17 @@ func IsEmpty(v reflect.Value) bool {
 	return reflect.DeepEqual(v.Interface(), reflect.Zero(v.Type()).Interface())
 }
 
-// IsEmptyValue reflect value check.
-// Difference the IsEmpty(), if value is ptr, will check real elem.
+// IsEmptyValue reflect value check, alias of the IsEmptyReal()
+var IsEmptyValue = IsEmptyReal
+
+// IsEmptyReal reflect value check.
+//
+// Note:
+//
+//	Difference the IsEmpty(), if value is ptr or interface, will check real elem.
 //
 // From src/pkg/encoding/json/encode.go.
-func IsEmptyValue(v reflect.Value) bool {
+func IsEmptyReal(v reflect.Value) bool {
 	switch v.Kind() {
 	case reflect.Array, reflect.Map, reflect.Slice, reflect.String:
 		return v.Len() == 0
@@ -120,7 +137,7 @@ func IsEmptyValue(v reflect.Value) bool {
 		if v.IsNil() {
 			return true
 		}
-		return IsEmptyValue(v.Elem())
+		return IsEmptyReal(v.Elem())
 	case reflect.Func:
 		return v.IsNil()
 	case reflect.Invalid:
