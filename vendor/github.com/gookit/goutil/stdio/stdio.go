@@ -14,7 +14,7 @@ func DiscardReader(src io.Reader) {
 	_, _ = io.Copy(io.Discard, src)
 }
 
-// ReadString read contents from io.Reader
+// ReadString read contents from io.Reader, return empty string on error
 func ReadString(r io.Reader) string {
 	bs, err := io.ReadAll(r)
 	if err != nil {
@@ -82,7 +82,7 @@ func WriteString(s string) {
 	_, _ = os.Stdout.WriteString(s)
 }
 
-// Writeln to stdout
+// Writeln string to stdout
 func Writeln(s string) {
 	_, _ = os.Stdout.WriteString(s)
 	_, _ = os.Stdout.Write([]byte("\n"))
