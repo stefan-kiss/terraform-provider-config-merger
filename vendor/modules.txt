@@ -124,7 +124,7 @@ github.com/geofffranks/yaml
 # github.com/go-test/deep v1.1.0
 ## explicit; go 1.16
 github.com/go-test/deep
-# github.com/golang/protobuf v1.5.2
+# github.com/golang/protobuf v1.5.3
 ## explicit; go 1.9
 github.com/golang/protobuf/jsonpb
 github.com/golang/protobuf/proto
@@ -177,7 +177,7 @@ github.com/hashicorp/go-hclog
 # github.com/hashicorp/go-multierror v1.1.1
 ## explicit; go 1.13
 github.com/hashicorp/go-multierror
-# github.com/hashicorp/go-plugin v1.4.9
+# github.com/hashicorp/go-plugin v1.4.10
 ## explicit; go 1.17
 github.com/hashicorp/go-plugin
 github.com/hashicorp/go-plugin/internal/plugin
@@ -261,7 +261,7 @@ github.com/hashicorp/terraform-plugin-framework/schema/validator
 github.com/hashicorp/terraform-plugin-framework/tfsdk
 github.com/hashicorp/terraform-plugin-framework/types
 github.com/hashicorp/terraform-plugin-framework/types/basetypes
-# github.com/hashicorp/terraform-plugin-go v0.15.0
+# github.com/hashicorp/terraform-plugin-go v0.18.0
 ## explicit; go 1.19
 github.com/hashicorp/terraform-plugin-go/internal/logging
 github.com/hashicorp/terraform-plugin-go/tfprotov5
@@ -286,7 +286,7 @@ github.com/hashicorp/terraform-plugin-log/internal/hclogutils
 github.com/hashicorp/terraform-plugin-log/internal/logging
 github.com/hashicorp/terraform-plugin-log/tflog
 github.com/hashicorp/terraform-plugin-log/tfsdklog
-# github.com/hashicorp/terraform-plugin-sdk/v2 v2.26.1
+# github.com/hashicorp/terraform-plugin-sdk/v2 v2.28.0
 ## explicit; go 1.19
 github.com/hashicorp/terraform-plugin-sdk/v2/diag
 github.com/hashicorp/terraform-plugin-sdk/v2/helper/logging
@@ -302,8 +302,9 @@ github.com/hashicorp/terraform-plugin-sdk/v2/internal/tfdiags
 github.com/hashicorp/terraform-plugin-sdk/v2/meta
 github.com/hashicorp/terraform-plugin-sdk/v2/plugin
 github.com/hashicorp/terraform-plugin-sdk/v2/terraform
-# github.com/hashicorp/terraform-plugin-testing v1.3.0
+# github.com/hashicorp/terraform-plugin-testing v1.5.1
 ## explicit; go 1.19
+github.com/hashicorp/terraform-plugin-testing/config
 github.com/hashicorp/terraform-plugin-testing/helper/resource
 github.com/hashicorp/terraform-plugin-testing/internal/addrs
 github.com/hashicorp/terraform-plugin-testing/internal/configs/configschema
@@ -311,14 +312,16 @@ github.com/hashicorp/terraform-plugin-testing/internal/configs/hcl2shim
 github.com/hashicorp/terraform-plugin-testing/internal/errorshim
 github.com/hashicorp/terraform-plugin-testing/internal/logging
 github.com/hashicorp/terraform-plugin-testing/internal/plugintest
+github.com/hashicorp/terraform-plugin-testing/internal/teststep
 github.com/hashicorp/terraform-plugin-testing/internal/tfdiags
 github.com/hashicorp/terraform-plugin-testing/plancheck
 github.com/hashicorp/terraform-plugin-testing/terraform
+github.com/hashicorp/terraform-plugin-testing/tfjsonpath
 github.com/hashicorp/terraform-plugin-testing/tfversion
-# github.com/hashicorp/terraform-registry-address v0.2.0
+# github.com/hashicorp/terraform-registry-address v0.2.1
 ## explicit; go 1.19
 github.com/hashicorp/terraform-registry-address
-# github.com/hashicorp/terraform-svchost v0.0.1
+# github.com/hashicorp/terraform-svchost v0.1.1
 ## explicit; go 1.19
 github.com/hashicorp/terraform-svchost
 # github.com/hashicorp/yamux v0.0.0-20181012175058-2f1d1f20f75d
@@ -402,7 +405,7 @@ github.com/vmihailenco/tagparser/v2/internal/parser
 # github.com/voxelbrain/goptions v0.0.0-20180630082107-58cddc247ea2
 ## explicit
 github.com/voxelbrain/goptions
-# github.com/zclconf/go-cty v1.13.2
+# github.com/zclconf/go-cty v1.13.3
 ## explicit; go 1.18
 github.com/zclconf/go-cty/cty
 github.com/zclconf/go-cty/cty/convert
@@ -415,7 +418,7 @@ github.com/zclconf/go-cty/cty/set
 # github.com/ziutek/utils v0.0.0-20190626152656-eb2a3b364d6c
 ## explicit
 github.com/ziutek/utils/netaddr
-# golang.org/x/crypto v0.9.0
+# golang.org/x/crypto v0.12.0
 ## explicit; go 1.17
 golang.org/x/crypto/bcrypt
 golang.org/x/crypto/blowfish
@@ -424,7 +427,7 @@ golang.org/x/crypto/hkdf
 golang.org/x/crypto/pbkdf2
 golang.org/x/crypto/scrypt
 golang.org/x/crypto/sha3
-# golang.org/x/exp v0.0.0-20230626212559-97b1e661b5df
+# golang.org/x/exp v0.0.0-20230809150735-7b3493d9a819
 ## explicit; go 1.20
 golang.org/x/exp/constraints
 golang.org/x/exp/slices
@@ -434,7 +437,7 @@ golang.org/x/mod/internal/lazyregexp
 golang.org/x/mod/modfile
 golang.org/x/mod/module
 golang.org/x/mod/semver
-# golang.org/x/net v0.10.0
+# golang.org/x/net v0.11.0
 ## explicit; go 1.17
 golang.org/x/net/context
 golang.org/x/net/http/httpguts
@@ -443,13 +446,13 @@ golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
-# golang.org/x/sys v0.10.0
+# golang.org/x/sys v0.11.0
 ## explicit; go 1.17
 golang.org/x/sys/cpu
 golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.11.0
+# golang.org/x/text v0.12.0
 ## explicit; go 1.17
 golang.org/x/text/cases
 golang.org/x/text/internal
@@ -475,10 +478,10 @@ google.golang.org/appengine/internal/datastore
 google.golang.org/appengine/internal/log
 google.golang.org/appengine/internal/modules
 google.golang.org/appengine/internal/remote_api
-# google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f
+# google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1
 ## explicit; go 1.19
 google.golang.org/genproto/googleapis/rpc/status
-# google.golang.org/grpc v1.54.0
+# google.golang.org/grpc v1.56.1
 ## explicit; go 1.17
 google.golang.org/grpc
 google.golang.org/grpc/attributes
@@ -532,7 +535,7 @@ google.golang.org/grpc/serviceconfig
 google.golang.org/grpc/stats
 google.golang.org/grpc/status
 google.golang.org/grpc/tap
-# google.golang.org/protobuf v1.30.0
+# google.golang.org/protobuf v1.31.0
 ## explicit; go 1.11
 google.golang.org/protobuf/encoding/protojson
 google.golang.org/protobuf/encoding/prototext
