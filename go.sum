@@ -44,8 +44,8 @@ github.com/fsnotify/fsnotify v1.4.9 h1:hsms1Qyu0jgnwNXIxa+/V/PDsU6CfLf6CNO8H7IWo
 github.com/fsnotify/fsnotify v1.4.9/go.mod h1:znqG4EE+3YCdAaPaxE2ZRY/06pZUdp0tY4IgpuI1SZQ=
 github.com/geofffranks/simpleyaml v0.0.0-20161109204137-c9320f076de5 h1:5AjbNPs5ax5Rf1/FeG8tLUYOoEbEDvcMvBgBUH4fDRM=
 github.com/geofffranks/simpleyaml v0.0.0-20161109204137-c9320f076de5/go.mod h1:EoVmbOOR2VpnWfvsZ1wVdjvUbitLYk1SYxGTssyjW4s=
-github.com/geofffranks/spruce v1.30.2 h1:M9jf0b7N0x6OixQDaPMQ8hwb5QBqdqiYxvhAbg6TcHo=
-github.com/geofffranks/spruce v1.30.2/go.mod h1:Dbc+2bkaF+ypU18ZtwG+zJKDxJSm291XXR3/33+92XA=
+github.com/geofffranks/spruce v1.31.0 h1:o+yooRuL1KuqIIHfOEYu2oN1UkHImskxizJF2H3giRE=
+github.com/geofffranks/spruce v1.31.0/go.mod h1:Dbc+2bkaF+ypU18ZtwG+zJKDxJSm291XXR3/33+92XA=
 github.com/geofffranks/yaml v0.0.0-20161117152608-9f2fe4b6f295 h1:CxigGHNaNtLTrnMveo9CjJjgXTuZpbLvuOvY/+c1v8g=
 github.com/geofffranks/yaml v0.0.0-20161117152608-9f2fe4b6f295/go.mod h1:+Qu4YOxbpR+Dn8JVzOTjJKWt3EZkEQD918wX+CkNcbE=
 github.com/go-git/gcfg v1.5.0 h1:Q5ViNfGF8zFgyJWPqYwA7qGFoMTEiBmdlkcfRmpIMa4=

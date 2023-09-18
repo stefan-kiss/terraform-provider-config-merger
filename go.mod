@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/cppforlife/go-patch v0.2.0
 	github.com/geofffranks/simpleyaml v0.0.0-20161109204137-c9320f076de5
-	github.com/geofffranks/spruce v1.30.2
+	github.com/geofffranks/spruce v1.31.0
 	github.com/geofffranks/yaml v0.0.0-20161117152608-9f2fe4b6f295
 	github.com/go-test/deep v1.1.0
 	github.com/gookit/goutil v0.6.12
