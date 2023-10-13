@@ -143,11 +143,13 @@ github.com/google/go-cmp/cmp/internal/value
 # github.com/google/uuid v1.3.0
 ## explicit
 github.com/google/uuid
-# github.com/gookit/goutil v0.6.12
-## explicit; go 1.18
+# github.com/gookit/goutil v0.6.13
+## explicit; go 1.19
 github.com/gookit/goutil/arrutil
+github.com/gookit/goutil/basefn
 github.com/gookit/goutil/byteutil
 github.com/gookit/goutil/comdef
+github.com/gookit/goutil/encodes
 github.com/gookit/goutil/internal/comfunc
 github.com/gookit/goutil/maputil
 github.com/gookit/goutil/mathutil
@@ -446,13 +448,12 @@ golang.org/x/net/http2/hpack
 golang.org/x/net/idna
 golang.org/x/net/internal/timeseries
 golang.org/x/net/trace
-# golang.org/x/sys v0.11.0
+# golang.org/x/sys v0.13.0
 ## explicit; go 1.17
 golang.org/x/sys/cpu
-golang.org/x/sys/internal/unsafeheader
 golang.org/x/sys/unix
 golang.org/x/sys/windows
-# golang.org/x/text v0.12.0
+# golang.org/x/text v0.13.0
 ## explicit; go 1.17
 golang.org/x/text/cases
 golang.org/x/text/internal
