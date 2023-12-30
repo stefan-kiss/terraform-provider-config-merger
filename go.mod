@@ -1,6 +1,6 @@
 module github.com/stefan-kiss/terraform-provider-config-merger
 
-go 1.19
+go 1.20
 
 require (
 	github.com/cppforlife/go-patch v0.2.0
