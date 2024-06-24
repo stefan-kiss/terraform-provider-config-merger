@@ -7,7 +7,7 @@ require (
 	github.com/geofffranks/simpleyaml v0.0.0-20161109204137-c9320f076de5
 	github.com/geofffranks/spruce v1.31.0
 	github.com/geofffranks/yaml v0.0.0-20161117152608-9f2fe4b6f295
-	github.com/go-test/deep v1.1.0
+	github.com/go-test/deep v1.1.1
 	github.com/gookit/goutil v0.6.15
 	github.com/hashicorp/terraform-plugin-docs v0.19.0
 	github.com/hashicorp/terraform-plugin-framework v1.8.0
